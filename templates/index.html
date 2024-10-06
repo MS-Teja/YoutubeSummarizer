@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Summarizer</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>YouTube Video Summarizer</h1>
+        </header>
+        <main>
+            <section id="input-section">
+                <input type="text" id="video-url" placeholder="Enter YouTube URL">
+                <button id="summarize-btn">Summarize</button>
+            </section>
+            <section id="video-info">
+                <img id="video-thumbnail" src="" alt="Video Thumbnail" style="display: none;">
+                <h2 id="video-title"></h2>
+            </section>
+            <section id="summary-section">
+                <h2>Summary</h2>
+                <div id="summary-content"></div>
+            </section>
+            <section id="history-section">
+                <h2>History</h2>
+                <ul id="history-list"></ul>
+            </section>
+        </main>
+    </div>
+    <script src="static/script.js"></script>
+</body>
+</html>
