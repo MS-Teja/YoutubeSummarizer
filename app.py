@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, jsonify
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import generate_password_hash, check_password_hash
 from openai import OpenAI
 import os
 import re
@@ -17,6 +19,17 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
+
+users = {
+    os.getenv("AUTH_USERNAME"): generate_password_hash(os.getenv("AUTH_PASSWORD"))
+}
+
+@auth.verify_password
+def verify_password(username, password):
+    if username in users and check_password_hash(users.get(username), password):
+        return username
+
 
 def extract_video_id(url):
     patterns = [
@@ -96,10 +109,12 @@ Please ensure the summary is concise yet informative, capturing the essence of t
         return None
 
 @app.route('/')
+@auth.login_required
 def index():
     return render_template('index.html')
 
 @app.route('/summarize', methods=['POST'])
+@auth.login_required
 def summarize():
     url = request.json['url']
     video_id = extract_video_id(url)
@@ -128,4 +143,4 @@ def summarize():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
